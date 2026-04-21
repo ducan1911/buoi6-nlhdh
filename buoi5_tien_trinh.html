@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buổi 6 — Tiến Trình Là Gì?</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0f4ff;--white:#fff;--border:#e2e8f0;
+  --blue:#2563eb;--blue-l:#eff6ff;--blue-b:#bfdbfe;
+  --green:#16a34a;--green-l:#f0fdf4;--green-b:#bbf7d0;
+  --amber:#d97706;--amber-l:#fffbeb;--amber-b:#fde68a;
+  --red:#dc2626;--red-l:#fef2f2;--red-b:#fecaca;
+  --purple:#7c3aed;--purple-l:#f5f3ff;--purple-b:#ddd6fe;
+  --teal:#0d9488;--teal-l:#f0fdfa;--teal-b:#99f6e4;
+  --slate:#475569;--slate-l:#f8fafc;
+  --text:#1e293b;--text2:#475569;--text3:#94a3b8;
+  --body:'Nunito',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--blue-b);border-radius:3px}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#1d4ed8 100%);padding:4rem 1.5rem 5.5rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 40%,rgba(99,102,241,.15) 0%,transparent 55%),radial-gradient(circle at 80% 70%,rgba(16,185,129,.1) 0%,transparent 45%)}
+.hero-inner{position:relative;z-index:1;max-width:720px;margin:0 auto}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#bfdbfe;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:6px 18px;border-radius:50px;margin-bottom:1.5rem}
+.hero h1{font-size:clamp(2.2rem,6vw,4rem);font-weight:900;color:#fff;line-height:1.08;margin-bottom:1rem}
+.hero h1 span{color:#fde68a}.hero h1 .l2{display:block;color:#6ee7b7}
+.hero-sub{font-size:1.05rem;color:#bfdbfe;font-weight:500;max-width:560px;margin:0 auto 2.5rem;line-height:1.75}
+.hero-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:2rem}
+.hc{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#e0f2fe;font-size:13px;font-weight:700;padding:7px 16px;border-radius:50px;text-decoration:none;transition:all .2s}
+.hc:hover{background:rgba(255,255,255,.22);color:#fff}
+.hero-wave{position:absolute;bottom:-2px;left:0;right:0;height:56px;background:var(--bg);clip-path:ellipse(55% 100% at 50% 100%)}
+
+/* ── NAV ── */
+.snav{background:var(--white);border-bottom:2px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:0;z-index:100;padding:0 1rem}
+.snav::-webkit-scrollbar{display:none}
+.snav a{font-size:13px;font-weight:800;padding:13px 16px;color:var(--text2);white-space:nowrap;text-decoration:none;border-bottom:3px solid transparent;transition:all .2s}
+.snav a:hover{color:var(--blue)}.snav a.on{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* ── PAGE ── */
+.page{max-width:920px;margin:0 auto;padding:0 1rem}
+.section{padding:4rem 0}
+.sep{height:2px;background:var(--border);border-radius:1px;margin:0 1rem}
+
+/* ── SECTION HEADER ── */
+.sh{margin-bottom:2.25rem}
+.sh-num{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;font-weight:900;font-size:15px;margin-bottom:.75rem}
+.sn-b{background:var(--blue-l);color:var(--blue)}
+.sn-g{background:var(--green-l);color:var(--green)}
+.sn-a{background:var(--amber-l);color:var(--amber)}
+.sn-p{background:var(--purple-l);color:var(--purple)}
+.sn-t{background:var(--teal-l);color:var(--teal)}
+.sh h2{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:900;color:var(--text);line-height:1.15;margin-bottom:.5rem}
+.sh p{font-size:.98rem;color:var(--text2);max-width:580px;line-height:1.75}
+
+/* ── CARDS ── */
+.card{background:var(--white);border:2px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem;transition:box-shadow .2s}
+.card:hover{box-shadow:0 4px 20px rgba(37,99,235,.08)}
+.card h3{font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:.65rem}
+.card p{font-size:.92rem;color:var(--text2);line-height:1.75;margin-bottom:.55rem}
+.card p:last-child{margin-bottom:0}
+.card-b{border-color:var(--blue-b);background:var(--blue-l)}.card-b h3{color:#1d4ed8}
+.card-g{border-color:var(--green-b);background:var(--green-l)}.card-g h3{color:var(--green)}
+.card-a{border-color:var(--amber-b);background:var(--amber-l)}.card-a h3{color:var(--amber)}
+.card-r{border-color:var(--red-b);background:var(--red-l)}.card-r h3{color:var(--red)}
+.card-p{border-color:var(--purple-b);background:var(--purple-l)}.card-p h3{color:var(--purple)}
+.card-t{border-color:var(--teal-b);background:var(--teal-l)}.card-t h3{color:var(--teal)}
+
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:1rem}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1rem;margin-bottom:1rem}
+
+/* ── ANALOGY ── */
+.analogy{background:var(--white);border:2px dashed var(--blue-b);border-radius:16px;padding:1.4rem;margin-bottom:1rem;display:flex;gap:1rem;align-items:flex-start}
+.analogy-ico{font-size:2.8rem;flex-shrink:0;line-height:1}
+.analogy h4{font-size:1rem;font-weight:800;color:#1d4ed8;margin-bottom:.3rem}
+.analogy p{font-size:.9rem;color:var(--text2);line-height:1.7;margin:0}
+
+/* ── STEPS ── */
+.steps{display:grid;gap:.65rem;margin:.75rem 0}
+.step{display:flex;gap:13px;align-items:flex-start;padding:.95rem 1.1rem;background:var(--white);border:2px solid var(--border);border-radius:12px;transition:border-color .2s,transform .15s}
+.step:hover{border-color:var(--blue-b);transform:translateX(3px)}
+.step.gs .step:hover{border-color:var(--green-b)}
+.sn2{width:30px;height:30px;border-radius:8px;background:var(--blue);color:#fff;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sn2.g{background:var(--green)}.sn2.a{background:var(--amber)}.sn2.r{background:var(--red)}.sn2.p{background:var(--purple)}
+.sb2{font-size:.9rem;color:var(--text2);line-height:1.65}
+.sb2 strong{color:var(--text);font-weight:700}
+.sb2 code{font-family:var(--mono);font-size:12px;background:#f1f5f9;border:1px solid var(--border);padding:1px 6px;border-radius:4px;color:var(--purple)}
+.sb2 .key{display:inline-block;background:var(--text);color:#fff;font-family:var(--mono);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;margin:0 1px}
+
+/* ── CALLOUT ── */
+.co{border-radius:14px;padding:1rem 1.2rem;margin-bottom:1rem;display:flex;gap:11px;align-items:flex-start}
+.co-ico{font-size:1.3rem;flex-shrink:0;margin-top:1px}
+.co h4{font-size:.9rem;font-weight:800;margin-bottom:.2rem}
+.co p{font-size:.855rem;line-height:1.7;margin:0}
+.co-b{background:var(--blue-l);border:2px solid var(--blue-b)}.co-b h4{color:#1d4ed8}.co-b p{color:#1e40af}
+.co-g{background:var(--green-l);border:2px solid var(--green-b)}.co-g h4{color:var(--green)}.co-g p{color:#166534}
+.co-a{background:var(--amber-l);border:2px solid var(--amber-b)}.co-a h4{color:var(--amber)}.co-a p{color:#92400e}
+.co-r{background:var(--red-l);border:2px solid var(--red-b)}.co-r h4{color:var(--red)}.co-r p{color:#991b1b}
+.co-p{background:var(--purple-l);border:2px solid var(--purple-b)}.co-p h4{color:var(--purple)}.co-p p{color:#4c1d95}
+.co-t{background:var(--teal-l);border:2px solid var(--teal-b)}.co-t h4{color:var(--teal)}.co-t p{color:#134e4a}
+
+/* ── STATE DIAGRAM ── */
+.state-diagram{background:var(--white);border:2px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
+.state-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin:1rem 0}
+.state-box{border-radius:12px;padding:.75rem 1.1rem;text-align:center;border:2.5px solid;min-width:100px;cursor:default;transition:transform .15s}
+.state-box:hover{transform:translateY(-2px)}
+.state-box .sl{font-size:1.4rem;display:block;margin-bottom:.15rem}
+.state-box .sname{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.state-box .sdesc{font-size:10px;font-weight:600;opacity:.75;margin-top:.1rem}
+.sb-new{background:#f0fdf4;border-color:var(--green-b)}.sb-new .sname{color:var(--green)}
+.sb-ready{background:var(--blue-l);border-color:var(--blue-b)}.sb-ready .sname{color:var(--blue)}
+.sb-run{background:#fefce8;border-color:#fde68a}.sb-run .sname{color:#ca8a04}
+.sb-wait{background:var(--purple-l);border-color:var(--purple-b)}.sb-wait .sname{color:var(--purple)}
+.sb-done{background:#f1f5f9;border-color:#cbd5e1}.sb-done .sname{color:var(--slate)}
+.s-arr{font-size:1.5rem;color:var(--text3);font-weight:900}
+
+/* ── CPU ANIMATION ── */
+.cpu-demo{background:var(--white);border:2px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
+.cpu-demo-title{font-size:.95rem;font-weight:800;color:var(--text);margin-bottom:1rem}
+.cpu-track{display:grid;grid-template-columns:80px 1fr;gap:12px;align-items:center;margin-bottom:.75rem}
+.cpu-track-label{font-size:13px;font-weight:700;color:var(--text2);text-align:right}
+.cpu-track-bar{height:32px;border-radius:8px;background:#f1f5f9;border:2px solid var(--border);overflow:hidden;position:relative;display:flex}
+.cpu-slot{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;transition:width .4s ease;overflow:hidden;white-space:nowrap;padding:0 4px;opacity:0;animation:fadeSlot .4s ease forwards}
+@keyframes fadeSlot{from{opacity:0;transform:scaleX(.8)}to{opacity:1;transform:scaleX(1)}}
+.cpu-btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:1rem}
+.cpu-btn{font-family:var(--body);font-size:13px;font-weight:700;padding:8px 16px;border-radius:50px;border:2px solid;cursor:pointer;transition:all .2s}
+
+/* ── PROCESS TABLE ── */
+.proc-wrap{background:var(--white);border:2px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:1rem}
+.proc-header{display:grid;grid-template-columns:2fr 1fr 1.2fr 1.2fr 1fr;padding:.65rem 1rem;background:#f8fafc;border-bottom:2px solid var(--border);font-size:11px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;gap:.5rem}
+.proc-row{display:grid;grid-template-columns:2fr 1fr 1.2fr 1.2fr 1fr;padding:.75rem 1rem;border-bottom:1px solid var(--border);align-items:center;gap:.5rem;transition:background .15s;cursor:default}
+.proc-row:last-child{border-bottom:none}
+.proc-row:hover{background:#f8fafc}
+.proc-name{font-size:.88rem;font-weight:700;color:var(--text)}
+.proc-name .psub{font-size:.75rem;font-weight:500;color:var(--text3)}
+.proc-cpu,.proc-ram,.proc-status,.proc-type{font-size:.85rem;font-weight:700}
+.proc-cpu{color:var(--text2);font-family:var(--mono)}
+.proc-ram{color:var(--text2);font-family:var(--mono)}
+.mini-bar-wrap{background:#f1f5f9;border-radius:3px;height:5px;overflow:hidden;margin-top:3px}
+.mini-bar{height:100%;border-radius:3px;transition:width .4s}
+.badge{display:inline-block;font-size:10px;font-weight:800;padding:3px 8px;border-radius:50px;text-transform:uppercase;letter-spacing:.3px}
+.bd-ok{background:var(--green-l);color:var(--green);border:1px solid var(--green-b)}
+.bd-sys{background:var(--blue-l);color:var(--blue);border:1px solid var(--blue-b)}
+.bd-warn{background:var(--amber-l);color:var(--amber);border:1px solid var(--amber-b)}
+.bd-danger{background:var(--red-l);color:var(--red);border:1px solid var(--red-b)}
+.bd-idle{background:#f1f5f9;color:var(--slate);border:1px solid #cbd5e1}
+
+/* ── TRASH DETECTOR ── */
+.trash-game{background:var(--white);border:2px solid var(--border);border-radius:16px;padding:1.4rem;margin-bottom:1rem}
+.trash-game h3{font-size:1rem;font-weight:800;color:var(--text);margin-bottom:.25rem}
+.trash-game .tg-sub{font-size:.875rem;color:var(--text2);margin-bottom:1rem}
+.trash-items{display:grid;gap:.6rem}
+.ti{display:flex;align-items:center;gap:12px;padding:.85rem 1rem;border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;background:var(--white)}
+.ti:hover{border-color:var(--blue-b);background:var(--blue-l)}
+.ti.ok-ans{border-color:var(--green-b);background:var(--green-l);pointer-events:none}
+.ti.bad-ans{border-color:var(--red-b);background:var(--red-l);pointer-events:none}
+.ti .ti-name{font-size:.9rem;font-weight:700;color:var(--text);flex:1}
+.ti .ti-desc{font-size:.78rem;color:var(--text2);font-family:var(--mono)}
+.ti .ti-tag{font-size:10px;font-weight:800;padding:3px 8px;border-radius:50px;flex-shrink:0}
+.ti .ti-result{font-size:.82rem;font-weight:700;margin-left:auto;display:none}
+.ti.ok-ans .ti-result{color:var(--green);display:block}
+.ti.bad-ans .ti-result{color:var(--red);display:block}
+
+/* ── TASK MANAGER GUIDE ── */
+.tm-wrap{background:var(--white);border:2px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:1rem}
+.tm-titlebar{background:#1e3a8a;padding:.6rem 1rem;display:flex;align-items:center;gap:8px}
+.tm-dot{width:10px;height:10px;border-radius:50%}
+.tm-lbl{font-size:12px;font-weight:700;color:#bfdbfe;margin-left:6px;font-family:var(--mono)}
+.tm-tabs{display:flex;border-bottom:2px solid var(--border);padding:0 1rem;background:#f8fafc}
+.tm-tab{font-size:12px;font-weight:800;padding:10px 14px;color:var(--text2);border-bottom:3px solid transparent;cursor:pointer;transition:all .2s}
+.tm-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tm-body{padding:1.25rem}
+.tm-row{display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr;gap:.5rem;align-items:center;padding:.55rem .75rem;border-bottom:1px solid var(--border);font-size:.83rem}
+.tm-head{background:#f1f5f9;font-weight:800;color:var(--text2);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+.tm-row:last-child{border-bottom:none}
+.tm-row:not(.tm-head):hover{background:#f8fafc}
+.tm-row .tc{font-family:var(--mono);font-weight:700}
+.thr{color:var(--red);font-weight:800}.thg{color:var(--green);font-weight:700}.tha{color:var(--amber);font-weight:700}
+
+/* ── BEFORE AFTER ── */
+.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:500px){.ba-grid{grid-template-columns:1fr}}
+.ba{border-radius:14px;padding:1.2rem;border:2px solid}
+.ba-b{background:var(--red-l);border-color:var(--red-b)}.ba-b h4{color:var(--red);font-weight:800;font-size:.95rem;margin-bottom:.5rem}
+.ba-a{background:var(--green-l);border-color:var(--green-b)}.ba-a h4{color:var(--green);font-weight:800;font-size:.95rem;margin-bottom:.5rem}
+.ba-item{font-size:.875rem;color:var(--text2);line-height:1.9;display:flex;gap:6px}
+.ba-b .ba-item::before{content:'✗';color:var(--red);font-weight:900;flex-shrink:0}
+.ba-a .ba-item::before{content:'✓';color:var(--green);font-weight:900;flex-shrink:0}
+
+/* ── QUIZ ── */
+.qprog{display:flex;gap:6px;margin-bottom:1.25rem}
+.qpd{height:7px;flex:1;border-radius:4px;background:var(--border);transition:background .3s}
+.qpd.done{background:var(--green)}.qpd.curr{background:var(--blue)}
+.qctr{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:.6rem}
+.qtext{font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:1rem;line-height:1.5}
+.qopts{display:grid;gap:8px}
+.qo{background:var(--white);border:2px solid var(--border);border-radius:10px;padding:12px 16px;font-size:.9rem;font-weight:600;color:var(--text);cursor:pointer;text-align:left;font-family:var(--body);transition:all .15s;display:flex;gap:10px;align-items:center}
+.qo .ql{font-weight:900;color:var(--text3);min-width:18px;flex-shrink:0}
+.qo:hover:not(:disabled){border-color:var(--blue-b);background:var(--blue-l);color:var(--blue)}
+.qo.ok{background:var(--green-l);border-color:var(--green-b);color:var(--green)}.qo.ok .ql{color:var(--green)}
+.qo.no{background:var(--red-l);border-color:var(--red-b);color:var(--red)}.qo.no .ql{color:var(--red)}
+.qfb{margin-top:.85rem;padding:1rem 1.2rem;border-radius:12px;font-size:.9rem;line-height:1.7;font-weight:600}
+.qfb.ok{background:var(--green-l);border:2px solid var(--green-b);color:#065f46}
+.qfb.no{background:var(--red-l);border:2px solid var(--red-b);color:#991b1b}
+.qfb strong{display:block;font-size:1rem;margin-bottom:.25rem}
+.qnext{margin-top:.75rem;font-weight:800;font-size:13px;padding:10px 24px;border:2px solid var(--blue-b);border-radius:50px;background:var(--blue-l);color:var(--blue);cursor:pointer;transition:all .2s}
+.qnext:hover{background:var(--blue);color:#fff}
+.score-wrap{text-align:center;padding:2.5rem;background:linear-gradient(135deg,var(--green-l),var(--blue-l));border:2px solid var(--green-b);border-radius:16px}
+.score-big{font-size:4.5rem;font-weight:900;line-height:1;margin-bottom:.5rem}
+.score-wrap .msg{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:.65rem}
+.score-wrap button{font-weight:800;font-size:13px;padding:10px 28px;border:2px solid var(--blue-b);border-radius:50px;background:var(--white);color:var(--blue);cursor:pointer;transition:all .2s}
+.score-wrap button:hover{background:var(--blue);color:#fff}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .5s,transform .5s}
+.rv.vi{opacity:1;transform:none}
+
+footer{text-align:center;padding:2.5rem;background:var(--white);border-top:2px solid var(--border);font-size:13px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+
+@media(max-width:600px){
+  .hero h1{font-size:2rem}
+  .g2,.g3{grid-template-columns:1fr}
+  .analogy{flex-direction:column}
+  .proc-header,.proc-row{grid-template-columns:2fr 1fr 1fr;gap:.3rem}
+  .proc-row>*:nth-child(4),.proc-header>*:nth-child(4){display:none}
+  .tm-row{grid-template-columns:2fr 1fr 1fr;gap:.3rem}
+  .tm-row>*:nth-child(4){display:none}
+  .state-row{gap:5px}
+  .state-box{min-width:80px;padding:.6rem .7rem}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Buổi 6 · Nguyên Lý Hệ Điều Hành</div>
+    <h1>Tiến Trình Là Gì?<span class="l2">CPU Làm Việc Ra Sao?</span></h1>
+    <p class="hero-sub">Học đơn giản từ đầu — hiểu tiến trình, trạng thái của nó, cách CPU "xoay vòng" phục vụ, và biết cách dẹp tiến trình rác trên máy.</p>
+    <div class="hero-chips">
+      <a href="#p1" class="hc">🧩 Tiến trình là gì?</a>
+      <a href="#p2" class="hc">🔄 Trạng thái tiến trình</a>
+      <a href="#p3" class="hc">⚡ CPU xoay vòng ra sao</a>
+      <a href="#p4" class="hc">🔍 Thực hành Task Manager</a>
+      <a href="#p5" class="hc">📝 Quiz ôn tập</a>
+    </div>
+  </div>
+  <div class="hero-wave"></div>
+</header>
+
+<nav class="snav">
+  <a href="#p1" class="on">🧩 Tiến trình</a>
+  <a href="#p2">🔄 Trạng thái</a>
+  <a href="#p3">⚡ CPU xoay vòng</a>
+  <a href="#p4">🔍 Thực hành</a>
+  <a href="#p5">📝 Quiz</a>
+</nav>
+
+<div class="page">
+
+<!-- ═══════════════════════════════════════
+     P1 — TIẾN TRÌNH LÀ GÌ?
+═══════════════════════════════════════ -->
+<div class="sep" style="margin-top:0"></div>
+<section id="p1" class="section">
+  <div class="sh rv">
+    <div class="sh-num sn-b">1</div>
+    <h2>Tiến trình (<i>Process</i>)<br>là gì?</h2>
+    <p>Hiểu khái niệm quan trọng nhất của buổi học — đơn giản, không thuật ngữ khó.</p>
+  </div>
+
+  <!-- Analogy -->
+  <div class="analogy rv">
+    <div class="analogy-ico">👨‍🍳</div>
+    <div>
+      <h4>Hình ảnh dễ nhớ: đầu bếp và công thức nấu ăn</h4>
+      <p><strong>Chương trình (Program)</strong> = Cuốn sổ ghi công thức nấu ăn — chỉ là văn bản nằm yên trên ổ cứng.<br>
+      <strong>Tiến trình (Process)</strong> = Đầu bếp đang thực sự nấu theo công thức đó — đang hoạt động, dùng bếp (CPU), dùng nguyên liệu (RAM).</p>
+      <p style="margin-top:.4rem">→ Mở Chrome 3 lần = 3 tiến trình khác nhau chạy từ cùng 1 chương trình Chrome!</p>
+    </div>
+  </div>
+
+  <div class="g2 rv">
+    <div class="card card-b">
+      <h3>📄 Chương trình (Program)</h3>
+      <p>File <code style="font-family:var(--mono);background:#dbeafe;padding:1px 5px;border-radius:4px;font-size:13px">.exe</code> nằm trên ổ cứng. Chưa làm gì cả. Không tốn CPU, không tốn RAM.</p>
+      <p>Ví dụ: file <code style="font-family:var(--mono);background:#dbeafe;padding:1px 5px;border-radius:4px;font-size:13px">chrome.exe</code> nằm trong thư mục Program Files.</p>
+    </div>
+    <div class="card card-g">
+      <h3>⚙️ Tiến trình (Process)</h3>
+      <p>Chương trình <strong>đang chạy</strong>. Được nạp vào RAM, đang dùng CPU, đang làm việc thực sự.</p>
+      <p>Ví dụ: bạn mở Chrome → Windows tạo ra 1 tiến trình Chrome (hoặc nhiều hơn) đang chạy trong RAM.</p>
+    </div>
+  </div>
+
+  <!-- Định nghĩa chính thức đơn giản -->
+  <div class="card rv">
+    <h3>📌 Định nghĩa đơn giản nhất</h3>
+    <p><strong>Tiến trình = Chương trình đang thực thi (đang chạy)</strong></p>
+    <p>Khi HĐH chạy một chương trình, nó tạo ra một tiến trình và cung cấp cho tiến trình đó:</p>
+    <div class="g3" style="margin-top:.75rem">
+      <div class="card card-b" style="margin-bottom:0">
+        <h3>🧠 Không gian RAM riêng</h3>
+        <p>Mỗi tiến trình có vùng RAM riêng — tiến trình khác không được xâm phạm.</p>
+      </div>
+      <div class="card card-a" style="margin-bottom:0">
+        <h3>⏱️ Thời gian CPU</h3>
+        <p>CPU lần lượt chạy từng tiến trình — mỗi tiến trình được một "lượt" nhỏ.</p>
+      </div>
+      <div class="card card-p" style="margin-bottom:0">
+        <h3>🆔 Mã số riêng (PID)</h3>
+        <p>Process ID — mã số để HĐH phân biệt tiến trình này với tiến trình khác.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phân biệt thực tế -->
+  <div class="card rv">
+    <h3>🔍 Ví dụ thực tế trên máy Windows</h3>
+    <div class="proc-wrap" style="margin-bottom:0">
+      <div class="proc-header"><span>Tên tiến trình</span><span>CPU %</span><span>RAM</span><span>Loại</span><span>Trạng thái</span></div>
+      <div class="proc-row">
+        <div><div class="proc-name">Google Chrome<div class="psub">chrome.exe (PID: 4820)</div></div></div>
+        <div class="proc-cpu">3.2%<div class="mini-bar-wrap"><div class="mini-bar" style="width:32%;background:var(--blue)"></div></div></div>
+        <div class="proc-ram">512 MB</div>
+        <div><span class="badge bd-ok">App người dùng</span></div>
+        <div><span class="badge bd-ok">Đang chạy</span></div>
+      </div>
+      <div class="proc-row">
+        <div><div class="proc-name">Microsoft Word<div class="psub">winword.exe (PID: 3160)</div></div></div>
+        <div class="proc-cpu">0.1%<div class="mini-bar-wrap"><div class="mini-bar" style="width:1%;background:var(--green)"></div></div></div>
+        <div class="proc-ram">180 MB</div>
+        <div><span class="badge bd-ok">App người dùng</span></div>
+        <div><span class="badge bd-idle">Đang chờ</span></div>
+      </div>
+      <div class="proc-row">
+        <div><div class="proc-name">Windows Defender<div class="psub">MsMpEng.exe (PID: 1128)</div></div></div>
+        <div class="proc-cpu">0.5%<div class="mini-bar-wrap"><div class="mini-bar" style="width:5%;background:var(--blue)"></div></div></div>
+        <div class="proc-ram">95 MB</div>
+        <div><span class="badge bd-sys">Hệ thống</span></div>
+        <div><span class="badge bd-ok">Đang chạy</span></div>
+      </div>
+      <div class="proc-row">
+        <div><div class="proc-name">System Idle Process<div class="psub">(PID: 0)</div></div></div>
+        <div class="proc-cpu">94.2%<div class="mini-bar-wrap"><div class="mini-bar" style="width:94%;background:#94a3b8)"></div></div></div>
+        <div class="proc-ram">0 MB</div>
+        <div><span class="badge bd-sys">HĐH</span></div>
+        <div><span class="badge bd-idle">CPU rảnh</span></div>
+      </div>
+    </div>
+    <div class="co co-b" style="margin-top:.75rem;margin-bottom:0">
+      <span class="co-ico">💡</span>
+      <div><h4>Lưu ý thú vị về "System Idle Process"</h4><p>Tiến trình đặc biệt này hiện <strong>CPU% rất cao (80–95%)</strong> nhưng thực ra là "CPU đang rảnh". Nó KHÔNG phải tiến trình rác — nó đo lượng CPU chưa dùng đến!</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     P2 — TRẠNG THÁI TIẾN TRÌNH
+═══════════════════════════════════════ -->
+<div class="sep"></div>
+<section id="p2" class="section">
+  <div class="sh rv">
+    <div class="sh-num sn-p">2</div>
+    <h2>5 Trạng thái của<br><span style="color:var(--purple)">tiến trình</span></h2>
+    <p>Một tiến trình không phải lúc nào cũng "chạy" — nó đi qua nhiều trạng thái khác nhau trong vòng đời của mình.</p>
+  </div>
+
+  <!-- Sơ đồ trạng thái -->
+  <div class="state-diagram rv">
+    <p style="font-size:.875rem;font-weight:700;color:var(--text2);margin-bottom:.5rem">Sơ đồ vòng đời một tiến trình:</p>
+    <div class="state-row">
+      <div class="state-box sb-new">
+        <span class="sl">🆕</span>
+        <div class="sname">New</div>
+        <div class="sdesc">Vừa được tạo</div>
+      </div>
+      <div class="s-arr">→</div>
+      <div class="state-box sb-ready">
+        <span class="sl">🙋</span>
+        <div class="sname">Ready</div>
+        <div class="sdesc">Chờ được dùng CPU</div>
+      </div>
+      <div class="s-arr">⇄</div>
+      <div class="state-box sb-run">
+        <span class="sl">🏃</span>
+        <div class="sname">Running</div>
+        <div class="sdesc">Đang dùng CPU</div>
+      </div>
+      <div class="s-arr">→</div>
+      <div class="state-box sb-done">
+        <span class="sl">✅</span>
+        <div class="sname">Terminated</div>
+        <div class="sdesc">Đã xong, giải phóng</div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;margin-top:.25rem">
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="s-arr" style="transform:rotate(90deg);font-size:1.2rem">↕</div>
+        <div class="state-box sb-wait" style="margin:0 8px">
+          <span class="sl">😴</span>
+          <div class="sname">Waiting</div>
+          <div class="sdesc">Chờ I/O hoặc sự kiện</div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:.8rem;color:var(--text3);font-weight:600;margin-top:.75rem;text-align:center">Running → Waiting khi tiến trình cần đọc file/chờ mạng. Waiting → Ready khi đã xong chờ.</p>
+  </div>
+
+  <!-- Chi tiết từng trạng thái -->
+  <div class="g2 rv">
+    <div>
+      <div class="card card-g">
+        <h3>🆕 New — Vừa được tạo</h3>
+        <p>Bạn nhấn đúp vào Chrome → Windows đang <strong>chuẩn bị</strong> tiến trình: nạp file .exe vào RAM, cấp PID, phân bổ không gian nhớ.</p>
+        <p>Thời gian ở trạng thái này: vài mili giây đến vài giây (tùy app nặng nhẹ).</p>
+      </div>
+      <div class="card card-b">
+        <h3>🙋 Ready — Sẵn sàng, đang chờ</h3>
+        <p>Tiến trình đã sẵn sàng chạy nhưng CPU đang bận với tiến trình khác. Nó đứng trong <strong>"hàng chờ"</strong> (Ready Queue).</p>
+        <p>Giống như xếp hàng mua đồ ăn — đã sẵn sàng, chỉ chờ đến lượt.</p>
+      </div>
+      <div class="card" style="border-color:#fde68a;background:#fefce8">
+        <h3 style="color:#ca8a04">🏃 Running — Đang dùng CPU</h3>
+        <p>Tiến trình đang thực sự được CPU xử lý. Tại một thời điểm, mỗi lõi CPU chỉ chạy <strong>1 tiến trình</strong>.</p>
+        <p>Thời gian chạy liên tục rất ngắn (khoảng 10–50ms) rồi lại nhường CPU cho tiến trình khác.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card card-p">
+        <h3>😴 Waiting — Đang chờ sự kiện</h3>
+        <p>Tiến trình cần chờ điều gì đó hoàn thành: đọc file từ ổ cứng, nhận dữ liệu từ mạng, chờ người dùng nhập liệu…</p>
+        <p>Lúc này nó <strong>không cần CPU</strong> → nhường CPU cho tiến trình khác → máy chạy hiệu quả hơn.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--slate)">✅ Terminated — Đã kết thúc</h3>
+        <p>Tiến trình đã hoàn thành hoặc bị người dùng/HĐH kết thúc. HĐH thu hồi toàn bộ RAM và tài nguyên.</p>
+        <p>Sau bước này, tiến trình <strong>biến mất hoàn toàn</strong> khỏi danh sách tiến trình.</p>
+      </div>
+      <div class="co co-a" style="margin-bottom:0">
+        <span class="co-ico">💡</span>
+        <div><h4>Mẹo nhớ 5 trạng thái</h4><p><strong>N</strong>ew → <strong>R</strong>eady → <strong>R</strong>unning → <strong>W</strong>aiting → <strong>T</strong>erminated<br>→ Nhớ tắt: <strong>"NR RWT"</strong> hoặc "Nhà Rất Rộng, Vui Thế"</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ví dụ thực tế -->
+  <div class="card rv">
+    <h3>📱 Ví dụ thực tế — Mở Zalo và gửi tin nhắn</h3>
+    <div class="steps">
+      <div class="step"><div class="sn2">①</div><div class="sb2"><strong>NEW:</strong> Bạn nhấn mở Zalo → Windows nạp Zalo vào RAM, cấp PID cho tiến trình Zalo.</div></div>
+      <div class="step"><div class="sn2">②</div><div class="sb2"><strong>READY:</strong> Zalo sẵn sàng chạy nhưng CPU đang xử lý Windows Defender → Zalo đứng chờ trong hàng đợi.</div></div>
+      <div class="step"><div class="sn2 p">③</div><div class="sb2"><strong>RUNNING:</strong> CPU chuyển sang Zalo → Zalo hiện giao diện, tải tin nhắn. CPU xử lý Zalo trong ~20ms.</div></div>
+      <div class="step"><div class="sn2 p">④</div><div class="sb2"><strong>WAITING:</strong> Zalo gửi yêu cầu đến server qua mạng → phải chờ server trả lời. Lúc này Zalo không cần CPU → nhường lại.</div></div>
+      <div class="step"><div class="sn2">⑤</div><div class="sb2"><strong>READY → RUNNING:</strong> Server trả lời về → Zalo vào hàng chờ → được CPU xử lý → hiện tin nhắn mới lên màn hình.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     P3 — CPU XOAY VÒNG
+═══════════════════════════════════════ -->
+<div class="sep"></div>
+<section id="p3" class="section">
+  <div class="sh rv">
+    <div class="sh-num sn-a">3</div>
+    <h2>CPU "xoay vòng" —<br><span style="color:var(--amber)">làm nhiều việc cùng lúc</span>?</h2>
+    <p>CPU thực ra chỉ làm 1 việc tại 1 thời điểm — nhưng chuyển đổi rất nhanh, tạo ảo giác làm nhiều thứ cùng lúc.</p>
+  </div>
+
+  <div class="analogy rv">
+    <div class="analogy-ico">🎪</div>
+    <div>
+      <h4>Hình ảnh: Người hề tung nhiều bóng</h4>
+      <p>CPU giống người hề tung <strong>nhiều quả bóng</strong> cùng lúc. Thực ra tại mỗi khoảnh khắc, người hề chỉ cầm <strong>1 quả bóng</strong> — nhưng chuyển tay quá nhanh nên mắt người xem thấy như tất cả đang bay cùng một lúc.</p>
+      <p style="margin-top:.3rem">CPU làm y như vậy: chạy mỗi tiến trình một chút rồi chuyển sang cái khác — nhanh đến mức bạn thấy tất cả app "chạy cùng lúc".</p>
+    </div>
+  </div>
+
+  <!-- Demo tương tác -->
+  <div class="cpu-demo rv">
+    <div class="cpu-demo-title">⚡ Xem CPU xoay vòng — nhấn "Chạy" để bắt đầu</div>
+    <div id="cpuTracks">
+      <div class="cpu-track">
+        <div class="cpu-track-label">Chrome</div>
+        <div class="cpu-track-bar" id="tr0"></div>
+      </div>
+      <div class="cpu-track">
+        <div class="cpu-track-label">Word</div>
+        <div class="cpu-track-bar" id="tr1"></div>
+      </div>
+      <div class="cpu-track">
+        <div class="cpu-track-label">Zalo</div>
+        <div class="cpu-track-bar" id="tr2"></div>
+      </div>
+      <div class="cpu-track">
+        <div class="cpu-track-label">Windows</div>
+        <div class="cpu-track-bar" id="tr3"></div>
+      </div>
+    </div>
+    <div style="font-size:.875rem;color:var(--text2);margin:.75rem 0;padding:.75rem 1rem;background:#f8fafc;border-radius:8px;border:2px solid var(--border)">
+      <span style="font-weight:700;color:var(--text)">Đang chạy: </span><span id="cpuStatus" style="font-family:var(--mono);font-weight:700;color:var(--blue)">Nhấn "Chạy" để xem</span>
+    </div>
+    <div class="cpu-btn-row">
+      <button class="cpu-btn" style="background:var(--green-l);border-color:var(--green-b);color:var(--green)" onclick="startCpu()">▶ Chạy mô phỏng</button>
+      <button class="cpu-btn" style="background:var(--red-l);border-color:var(--red-b);color:var(--red)" onclick="stopCpu()">⏹ Dừng</button>
+      <button class="cpu-btn" style="background:var(--amber-l);border-color:var(--amber-b);color:var(--amber)" onclick="resetCpu()">↺ Xóa</button>
+    </div>
+    <p style="font-size:.82rem;color:var(--text3);margin-top:.75rem;font-weight:600">Mỗi ô màu = CPU chạy tiến trình đó 1 lần (~10–50ms). Nhìn vào sẽ thấy CPU "nhảy" qua lại giữa các app.</p>
+  </div>
+
+  <!-- Context Switch -->
+  <div class="card rv">
+    <h3>🔄 "Context Switch" — đổi ca làm việc</h3>
+    <p>Mỗi lần CPU chuyển từ tiến trình này sang tiến trình khác, HĐH phải:</p>
+    <div class="steps">
+      <div class="step"><div class="sn2">1</div><div class="sb2"><strong>Lưu lại trạng thái hiện tại</strong> của tiến trình đang chạy: đang làm đến đâu rồi, biến số nào đang dùng... (lưu vào PCB - Process Control Block)</div></div>
+      <div class="step"><div class="sn2">2</div><div class="sb2"><strong>Nạp trạng thái</strong> của tiến trình tiếp theo vào CPU: tiến trình này đã làm đến đâu trước đó, cần tiếp tục từ đâu.</div></div>
+      <div class="step"><div class="sn2 g">3</div><div class="sb2"><strong>Bắt đầu chạy</strong> tiến trình mới. Tiến trình trước đó chuyển sang trạng thái <strong>Ready</strong>, xếp hàng chờ lượt tiếp theo.</div></div>
+    </div>
+    <div class="co co-b" style="margin-bottom:0;margin-top:.75rem">
+      <span class="co-ico">⚡</span>
+      <div><h4>Tốc độ đáng kinh ngạc</h4><p>Context Switch xảy ra <strong>hàng nghìn lần mỗi giây</strong> (mỗi lần ~1–10 micro giây). Nhanh đến mức bạn hoàn toàn không nhận ra — thấy như tất cả app chạy song song!</p></div>
+    </div>
+  </div>
+
+  <!-- Round Robin -->
+  <div class="card card-a rv">
+    <h3>🎯 Thuật toán Round Robin — Lần lượt từng người</h3>
+    <p>Windows dùng thuật toán <strong>Round Robin</strong> (và các biến thể) để chia đều thời gian CPU:</p>
+    <div class="steps">
+      <div class="step"><div class="sn2 a">1</div><div class="sb2">HĐH xếp tất cả tiến trình vào <strong>hàng chờ</strong> (queue), ưu tiên theo mức độ quan trọng.</div></div>
+      <div class="step"><div class="sn2 a">2</div><div class="sb2">Mỗi tiến trình được <strong>một khoảng thời gian cố định</strong> (Time Quantum, ~10–50ms) để dùng CPU.</div></div>
+      <div class="step"><div class="sn2 a">3</div><div class="sb2">Hết giờ → <strong>bị ngắt</strong>, quay lại cuối hàng. Tiến trình tiếp theo được chạy.</div></div>
+      <div class="step"><div class="sn2 g">4</div><div class="sb2">Tiến trình ưu tiên cao hơn (như gõ phím, vẽ màn hình) được <strong>ưu tiên chạy trước</strong> để máy phản hồi nhanh.</div></div>
+    </div>
+    <div class="co co-g" style="margin-bottom:0;margin-top:.75rem">
+      <span class="co-ico">🏆</span>
+      <div><h4>Tại sao giao diện không bị đứng khi CPU bận?</h4><p>Vì các tiến trình liên quan đến <strong>giao diện người dùng</strong> (vẽ màn hình, nhận input bàn phím/chuột) được Windows ưu tiên ở mức cao nhất — dù CPU bận đến đâu, interface vẫn phản hồi.</p></div>
+    </div>
+  </div>
+
+  <!-- Đơn nhân vs đa nhân -->
+  <div class="g2 rv">
+    <div class="card">
+      <h3>💻 CPU 1 nhân (Single-core)</h3>
+      <p>Chỉ có 1 bộ xử lý. Tại mỗi thời điểm chỉ chạy 1 tiến trình, nhưng chuyển đổi nhanh.</p>
+      <p>Giống <strong>1 bàn học</strong>: chỉ 1 học sinh ngồi làm bài, nhưng thay nhau liên tục.</p>
+    </div>
+    <div class="card card-g">
+      <h3>💻💻 CPU nhiều nhân (Multi-core)</h3>
+      <p>Có 4, 6, 8 lõi → thực sự chạy song song nhiều tiến trình cùng lúc!</p>
+      <p>Giống <strong>4 bàn học</strong>: 4 học sinh cùng ngồi làm bài thật sự — nhanh hơn 4 lần về đa nhiệm.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     P4 — THỰC HÀNH
+═══════════════════════════════════════ -->
+<div class="sep"></div>
+<section id="p4" class="section">
+  <div class="sh rv">
+    <div class="sh-num sn-t">4</div>
+    <h2>Thực hành —<br><span style="color:var(--teal)">Xem & dẹp tiến trình rác</span></h2>
+    <p>Mở Task Manager, nhận diện đúng tiến trình nào rác và cách dẹp an toàn — không làm hỏng máy.</p>
+  </div>
+
+  <!-- Task Manager mockup -->
+  <div class="card rv">
+    <h3>📋 Mô phỏng Task Manager — tab Processes</h3>
+    <div class="tm-wrap">
+      <div class="tm-titlebar">
+        <div class="tm-dot" style="background:#f87171"></div>
+        <div class="tm-dot" style="background:#fbbf24"></div>
+        <div class="tm-dot" style="background:#34d399"></div>
+        <div class="tm-lbl">Task Manager</div>
+        <span style="font-size:11px;color:#7dd3fc;margin-left:auto;font-family:var(--mono)">Ctrl + Shift + Esc</span>
+      </div>
+      <div class="tm-tabs">
+        <div class="tm-tab active">Processes</div>
+        <div class="tm-tab">Performance</div>
+        <div class="tm-tab">Startup</div>
+        <div class="tm-tab">Details</div>
+      </div>
+      <div class="tm-body" style="padding:.75rem">
+        <div class="tm-row tm-head"><span>Tên</span><span>CPU</span><span>Memory</span><span>Ghi chú</span></div>
+        <div class="tm-row"><span style="font-weight:700">Google Chrome</span><span class="tc thg">3.5%</span><span class="tc">512 MB</span><span><span class="badge bd-ok">Bình thường</span></span></div>
+        <div class="tm-row"><span style="font-weight:700">Microsoft Word</span><span class="tc thg">0.0%</span><span class="tc">180 MB</span><span><span class="badge bd-ok">Bình thường</span></span></div>
+        <div class="tm-row" style="background:#fef2f2"><span style="font-weight:700;color:var(--red)">SearchIndexer.exe</span><span class="tc thr">45%</span><span class="tc">850 MB</span><span><span class="badge bd-warn">⚠ Nghi ngờ</span></span></div>
+        <div class="tm-row" style="background:#fff7ed"><span style="font-weight:700;color:#ea580c">update_helper.exe</span><span class="tc tha">12%</span><span class="tc">320 MB</span><span><span class="badge bd-warn">⚠ Kiểm tra</span></span></div>
+        <div class="tm-row"><span style="font-weight:700">Windows Defender</span><span class="tc thg">0.5%</span><span class="tc">95 MB</span><span><span class="badge bd-sys">Hệ thống</span></span></div>
+        <div class="tm-row" style="background:#fef2f2"><span style="font-weight:700;color:var(--red)">ToolbarHelper.exe</span><span class="tc thr">8%</span><span class="tc">280 MB</span><span><span class="badge bd-danger">🗑 Tiến trình rác</span></span></div>
+        <div class="tm-row"><span style="font-weight:700">System Idle Process</span><span class="tc" style="color:var(--slate)">38%</span><span class="tc">0 MB</span><span><span class="badge bd-idle">CPU rảnh</span></span></div>
+      </div>
+    </div>
+    <div class="co co-b" style="margin-bottom:0;margin-top:.5rem">
+      <span class="co-ico">👆</span>
+      <div><h4>Nhìn vào bảng trên, bạn thấy gì?</h4><p>Có 3 tiến trình đáng ngờ: <strong>SearchIndexer</strong> (45% CPU bất thường), <strong>update_helper</strong> (tên giả mạo), <strong>ToolbarHelper</strong> (phần mềm quảng cáo). Phần tiếp theo hướng dẫn cách nhận diện.</p></div>
+    </div>
+  </div>
+
+  <!-- Cách nhận diện tiến trình rác -->
+  <div class="card rv">
+    <h3>🔍 Cách nhận diện tiến trình rác — 5 dấu hiệu</h3>
+    <div class="g2" style="margin-bottom:0">
+      <div>
+        <div class="co co-r">
+          <span class="co-ico">🔴</span>
+          <div><h4>Dấu hiệu 1: CPU cao bất thường</h4><p>App không quan trọng mà chiếm 30–90% CPU liên tục → nghi ngờ virus/malware hoặc app bị lỗi.</p></div>
+        </div>
+        <div class="co co-r">
+          <span class="co-ico">🔴</span>
+          <div><h4>Dấu hiệu 2: Tên giống file hệ thống nhưng sai chính tả</h4><p><code style="font-family:var(--mono);font-size:12px;background:#fef2f2;padding:1px 5px;border-radius:4px">svchost.exe</code> = hợp lệ. <code style="font-family:var(--mono);font-size:12px;background:#fef2f2;padding:1px 5px;border-radius:4px">svch0st.exe</code> = giả mạo (chữ o → số 0)!</p></div>
+        </div>
+        <div class="co co-a">
+          <span class="co-ico">🟡</span>
+          <div><h4>Dấu hiệu 3: Tên chứa "toolbar", "helper", "updater" lạ</h4><p>Các phần mềm quảng cáo, adware thường dùng tên nghe có vẻ hợp lệ nhưng bạn không nhớ cài khi nào.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="co co-r">
+          <span class="co-ico">🔴</span>
+          <div><h4>Dấu hiệu 4: RAM cao mà không mở app đó</h4><p>Bạn chưa mở app nào lớn mà RAM đã dùng 90% → có tiến trình chạy ngầm ăn RAM.</p></div>
+        </div>
+        <div class="co co-a">
+          <span class="co-ico">🟡</span>
+          <div><h4>Dấu hiệu 5: Không biết tiến trình này là gì</h4><p>Click phải vào tiến trình → "Search online" → Google sẽ giúp bạn biết nó có hợp lệ không.</p></div>
+        </div>
+        <div class="co co-g">
+          <span class="co-ico">✅</span>
+          <div><h4>Các tiến trình HỆ THỐNG quan trọng — ĐỪNG tắt!</h4><p><code style="font-family:var(--mono);font-size:11px;background:#f0fdf4;padding:1px 5px;border-radius:3px">svchost.exe</code> · <code style="font-family:var(--mono);font-size:11px;background:#f0fdf4;padding:1px 5px;border-radius:3px">System</code> · <code style="font-family:var(--mono);font-size:11px;background:#f0fdf4;padding:1px 5px;border-radius:3px">lsass.exe</code> · <code style="font-family:var(--mono);font-size:11px;background:#f0fdf4;padding:1px 5px;border-radius:3px">winlogon.exe</code> · <code style="font-family:var(--mono);font-size:11px;background:#f0fdf4;padding:1px 5px;border-radius:3px">explorer.exe</code></p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game nhận diện -->
+  <div class="trash-game rv">
+    <h3>🎮 Bài tập nhận diện — Tiến trình này có phải rác không?</h3>
+    <p class="tg-sub">Nhấn vào tiến trình để chọn. Xanh = an toàn, đỏ = nghi ngờ/rác.</p>
+    <div class="trash-items" id="trashGame"></div>
+    <div id="trashScore" style="margin-top:.75rem;font-size:.9rem;font-weight:700;color:var(--text2)"></div>
+  </div>
+
+  <!-- Hướng dẫn dẹp tiến trình -->
+  <div class="card rv">
+    <h3>🗑️ Cách kết thúc tiến trình rác — từng bước</h3>
+    <div class="steps">
+      <div class="step"><div class="sn2">1</div><div class="sb2">Mở Task Manager: nhấn <span class="key">Ctrl</span> + <span class="key">Shift</span> + <span class="key">Esc</span></div></div>
+      <div class="step"><div class="sn2">2</div><div class="sb2">Nhấn vào tab <strong>"Processes"</strong> — xem danh sách tất cả tiến trình đang chạy.</div></div>
+      <div class="step"><div class="sn2">3</div><div class="sb2">Nhấn vào tiêu đề cột <strong>"CPU"</strong> để sắp xếp theo CPU cao nhất — tiến trình rác hay nằm đầu danh sách.</div></div>
+      <div class="step"><div class="sn2">4</div><div class="sb2">Click chuột phải vào tiến trình nghi ngờ → chọn <strong>"Search online"</strong> → đọc kết quả Google để biết nó là gì.</div></div>
+      <div class="step"><div class="sn2 a">5</div><div class="sb2">Nếu xác nhận là rác/không cần: click phải → chọn <strong>"End task"</strong> để kết thúc tiến trình đó.</div></div>
+      <div class="step"><div class="sn2 g">6</div><div class="sb2">Nếu tiến trình liên tục tự khởi động lại → vào tab <strong>"Startup"</strong> → tìm app đó → nhấn <strong>"Disable"</strong> để ngăn khởi động cùng Windows.</div></div>
+    </div>
+    <div class="co co-r" style="margin-top:.75rem;margin-bottom:0">
+      <span class="co-ico">⛔</span>
+      <div><h4>TUYỆT ĐỐI không End Task các tiến trình hệ thống!</h4><p>Tắt <code style="font-family:var(--mono);font-size:12px;background:#fef2f2;padding:1px 5px;border-radius:4px">explorer.exe</code> → màn hình desktop biến mất. Tắt <code style="font-family:var(--mono);font-size:12px;background:#fef2f2;padding:1px 5px;border-radius:4px">lsass.exe</code> → Windows tự restart. Nếu không chắc → Google tên tiến trình trước!</p></div>
+    </div>
+  </div>
+
+  <!-- Tab Startup -->
+  <div class="card card-t rv">
+    <h3>🚀 Tab Startup — Dẹp app khởi động cùng Windows</h3>
+    <p>Nhiều app tự thêm vào danh sách "chạy ngầm khi khởi động máy" — làm máy khởi động chậm và tốn RAM từ đầu.</p>
+    <div class="steps">
+      <div class="step"><div class="sn2" style="background:var(--teal)">1</div><div class="sb2">Trong Task Manager → nhấn tab <strong>"Startup"</strong></div></div>
+      <div class="step"><div class="sn2" style="background:var(--teal)">2</div><div class="sb2">Nhìn cột <strong>"Startup impact"</strong>: High = khởi động chậm nhiều, Medium = trung bình, Low = ít ảnh hưởng.</div></div>
+      <div class="step"><div class="sn2" style="background:var(--teal)">3</div><div class="sb2">Các app có thể Disable an toàn: Zalo, Spotify, Discord, Steam, Update helpers của các app… (bạn vẫn mở được thủ công).</div></div>
+      <div class="step"><div class="sn2 g">4</div><div class="sb2">Click chuột phải → <strong>"Disable"</strong> → app sẽ không tự khởi động nữa, nhưng vẫn dùng được bình thường khi bạn mở tay.</div></div>
+    </div>
+    <div class="ba-grid" style="margin-top:.75rem">
+      <div class="ba ba-b">
+        <h4>❌ Trước khi dọn Startup</h4>
+        <div class="ba-item">15–20 app tự khởi động</div>
+        <div class="ba-item">Khởi động máy mất 2–3 phút</div>
+        <div class="ba-item">RAM bị ăn ngay từ đầu 3–4 GB</div>
+        <div class="ba-item">Máy chậm trong 10 phút đầu</div>
+      </div>
+      <div class="ba ba-a">
+        <h4>✅ Sau khi dọn Startup</h4>
+        <div class="ba-item">Chỉ còn app thiết yếu</div>
+        <div class="ba-item">Khởi động chỉ mất 30–60 giây</div>
+        <div class="ba-item">RAM chỉ dùng 1.5–2 GB ban đầu</div>
+        <div class="ba-item">Máy phản hồi ngay sau khi vào desktop</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     P5 — QUIZ
+═══════════════════════════════════════ -->
+<div class="sep"></div>
+<section id="p5" class="section">
+  <div class="sh rv">
+    <div class="sh-num sn-g">5</div>
+    <h2>Quiz ôn tập<br><span style="color:var(--green)">Buổi 6</span></h2>
+    <p>6 câu hỏi — trả lời đúng mới qua câu tiếp theo. Giải thích chi tiết sau mỗi câu!</p>
+  </div>
+
+  <div class="card rv">
+    <div id="quizBox">
+      <div class="qprog" id="qprog"></div>
+      <div id="qarea"></div>
+    </div>
+  </div>
+</section>
+
+</div>
+<footer>Buổi 6 · Tiến Trình & CPU Xoay Vòng · Nguyên Lý Hệ Điều Hành · Trường TC Kinh tế – Kỹ thuật TP. Cần Thơ</footer>
+
+<script>
+/* ── REVEAL ── */
+const ro = new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vi')}),{threshold:.07});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+
+/* ── ACTIVE NAV ── */
+const navAs=document.querySelectorAll('.snav a');
+const sects=document.querySelectorAll('section[id]');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sects.forEach(s=>{if(window.scrollY>=s.offsetTop-130)cur=s.id});
+  navAs.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur));
+},{passive:true});
+
+/* ── CPU DEMO ── */
+const apps=[
+  {name:'Chrome',color:'#bfdbfe',text:'#1d4ed8'},
+  {name:'Word',color:'#bbf7d0',text:'#166534'},
+  {name:'Zalo',color:'#ddd6fe',text:'#5b21b6'},
+  {name:'Windows',color:'#fde68a',text:'#92400e'}
+];
+const slots=[[],[],[],[],[]];
+let cpuTimer=null,cpuStep=0;
+
+function addSlot(trackIdx,app,width){
+  const bar=document.getElementById('tr'+trackIdx);
+  const d=document.createElement('div');
+  d.className='cpu-slot';
+  d.style.cssText=`width:${width}%;background:${app.color};color:${app.text};animation-delay:0s`;
+  d.textContent=app.name;
+  bar.appendChild(d);
+}
+
+function startCpu(){
+  if(cpuTimer)return;
+  const schedule=[
+    {t:0,app:0},{t:1,app:2},{t:2,app:1},{t:3,app:0},
+    {t:0,app:3},{t:1,app:0},{t:2,app:2},{t:3,app:1},
+    {t:0,app:1},{t:2,app:0},{t:3,app:2},{t:1,app:3},
+    {t:0,app:2},{t:2,app:3},{t:1,app:0},{t:3,app:1},
+  ];
+  let i=0;
+  const status=document.getElementById('cpuStatus');
+  cpuTimer=setInterval(()=>{
+    if(i>=schedule.length){stopCpu();return;}
+    const s=schedule[i];
+    const a=apps[s.app];
+    addSlot(s.t,a,Math.random()*8+6);
+    status.textContent=`Đang xử lý: ${a.name}`;
+    status.style.color=a.text;
+    i++;
+  },300);
+}
+function stopCpu(){clearInterval(cpuTimer);cpuTimer=null;document.getElementById('cpuStatus').textContent='Đã dừng — nhấn Chạy để xem lại';}
+function resetCpu(){
+  stopCpu();
+  for(let i=0;i<4;i++)document.getElementById('tr'+i).innerHTML='';
+  document.getElementById('cpuStatus').textContent='Nhấn "Chạy" để xem';
+  document.getElementById('cpuStatus').style.color='var(--blue)';
+}
+
+/* ── TRASH GAME ── */
+const trashItems=[
+  {name:'chrome.exe',desc:'Trình duyệt Google Chrome',safe:true,why:'Đây là Chrome hợp lệ.'},
+  {name:'ToolbarHelper.exe',desc:'Yahoo Toolbar Helper',safe:false,why:'Phần mềm quảng cáo không cần thiết — End Task và gỡ cài đặt.'},
+  {name:'explorer.exe',desc:'Windows Explorer (file manager)',safe:true,why:'Tiến trình hệ thống quan trọng — KHÔNG được tắt!'},
+  {name:'WinRAR.exe',desc:'Trình nén/giải nén file',safe:true,why:'App bình thường, an toàn.'},
+  {name:'svch0st.exe',desc:'(chữ O thay bằng số 0)',safe:false,why:'Giả mạo svchost.exe! Tên bị đổi chữ "o" → "0". Đây là virus/malware.'},
+  {name:'SearchIndexer.exe',desc:'Dùng 50% CPU liên tục',safe:false,why:'SearchIndexer hệ thống bình thường nhưng nếu dùng 50%+ CPU liên tục là bị lỗi → có thể End Task để khởi động lại.'},
+  {name:'lsass.exe',desc:'Local Security Auth Subsystem',safe:true,why:'Tiến trình hệ thống bảo mật — KHÔNG tắt, máy sẽ tự restart!'},
+  {name:'GameBooster_updater.exe',desc:'Game booster update process',safe:false,why:'Phần mềm "tăng tốc game" thường là adware hoặc không cần thiết.'},
+];
+let trashAnswered=0,trashCorrect=0;
+function buildTrashGame(){
+  const container=document.getElementById('trashGame');
+  trashItems.forEach((item,idx)=>{
+    const d=document.createElement('div');
+    d.className='ti';
+    d.innerHTML=`
+      <div>
+        <div class="ti-name">${item.name}</div>
+        <div class="ti-desc">${item.desc}</div>
+      </div>
+      <span class="ti-tag" style="background:${item.safe?'var(--green-l)':'var(--red-l)'};color:${item.safe?'var(--green)':'var(--red)'};border:1px solid ${item.safe?'var(--green-b)':'var(--red-b)'}">???</span>
+      <div class="ti-result" id="tr-res-${idx}"></div>`;
+    d.onclick=()=>answerTrash(d,item,idx);
+    container.appendChild(d);
+  });
+}
+function answerTrash(el,item,idx){
+  if(el.classList.contains('ok-ans')||el.classList.contains('bad-ans'))return;
+  trashAnswered++;
+  const res=document.getElementById('tr-res-'+idx);
+  const tag=el.querySelector('.ti-tag');
+  if(item.safe){
+    el.classList.add('ok-ans');
+    tag.textContent='✅ An toàn';
+    tag.style.cssText='background:var(--green-l);color:var(--green);border:1px solid var(--green-b)';
+    res.textContent=item.why;
+    trashCorrect++;
+  } else {
+    el.classList.add('bad-ans');
+    tag.textContent='🗑 Rác/Nguy hiểm';
+    tag.style.cssText='background:var(--red-l);color:var(--red);border:1px solid var(--red-b)';
+    res.textContent=item.why;
+    trashCorrect++;
+  }
+  if(trashAnswered===trashItems.length){
+    document.getElementById('trashScore').innerHTML=`<span style="color:var(--green)">✅ Đã nhận diện xong ${trashItems.length} tiến trình! Bạn đã biết phân biệt tiến trình an toàn và rác.</span>`;
+  }
+}
+buildTrashGame();
+
+/* ── QUIZ ── */
+const Qs=[
+  {
+    q:'Sự khác biệt cơ bản nhất giữa "Chương trình" và "Tiến trình" là gì?',
+    opts:['Chương trình lưu trên RAM, tiến trình lưu trên ổ cứng','Chương trình là file nằm yên trên ổ cứng, tiến trình là chương trình đang chạy trong RAM','Chương trình chạy nhanh hơn tiến trình','Chúng giống nhau, chỉ khác tên gọi'],
+    ok:1,
+    expl:'✅ Đúng! Chương trình (.exe) = công thức trên ổ cứng, không làm gì cả. Tiến trình = đầu bếp đang nấu theo công thức đó — đang dùng CPU và RAM thực sự.'
+  },
+  {
+    q:'Tiến trình đang gửi yêu cầu đến server và chờ phản hồi. Nó đang ở trạng thái nào?',
+    opts:['Running — đang dùng CPU để chờ','Ready — đang xếp hàng','Waiting — chờ sự kiện bên ngoài (mạng)','Terminated — đã kết thúc'],
+    ok:2,
+    expl:'✅ Đúng! Khi tiến trình cần chờ I/O (mạng, ổ cứng, bàn phím...) mà chưa có kết quả, nó vào trạng thái Waiting. Lúc này nó không cần CPU → nhường CPU cho tiến trình khác.'
+  },
+  {
+    q:'Tại sao máy tính cảm giác như chạy nhiều app cùng lúc, dù CPU chỉ xử lý 1 tiến trình tại 1 thời điểm?',
+    opts:['Vì RAM rất nhanh nên bù lại','Vì CPU chuyển đổi giữa các tiến trình hàng nghìn lần mỗi giây — nhanh đến mức không nhận ra','Vì mỗi app dùng một loại RAM khác nhau','Vì HĐH nhân bản CPU'],
+    ok:1,
+    expl:'✅ Đúng! Context Switch xảy ra cực kỳ nhanh (~1–10 micro giây, hàng nghìn lần mỗi giây). Não người không nhận thấy sự gián đoạn ngắn đó → thấy như tất cả chạy song song.'
+  },
+  {
+    q:'Trong Task Manager, bạn thấy tiến trình "svch0st.exe" (chữ o đổi thành số 0) đang dùng 60% CPU. Bạn nên làm gì?',
+    opts:['Không làm gì, đây là tiến trình hệ thống bình thường','Tắt máy ngay lập tức','Đây là tiến trình giả mạo — End Task và chạy phần mềm diệt virus ngay','Tăng Pagefile để giải quyết'],
+    ok:2,
+    expl:'✅ Đúng! svchost.exe (chữ o) là hệ thống hợp lệ. Nhưng svch0st.exe (số 0) là tên giả mạo — kỹ thuật phổ biến của virus/malware. Cần End Task và quét virus ngay!'
+  },
+  {
+    q:'Để máy khởi động nhanh hơn, bạn nên làm gì trong Task Manager?',
+    opts:['Tắt tiến trình System Idle Process','Vào tab Startup → Disable các app không cần thiết tự khởi động','Xóa tiến trình svchost.exe','Tăng dung lượng Pagefile'],
+    ok:1,
+    expl:'✅ Đúng! Tab Startup trong Task Manager liệt kê tất cả app tự chạy khi Windows khởi động. Disable những app không cần thiết (Zalo, Spotify, Steam...) giúp máy khởi động nhanh hơn rất nhiều.'
+  },
+  {
+    q:'Tiến trình "System Idle Process" đang chiếm 85% CPU. Bạn nên xử lý thế nào?',
+    opts:['End Task ngay vì nó đang làm máy chậm','Không làm gì — 85% ở đây nghĩa là CPU đang rảnh 85%, không có gì bất thường','Tắt nó trong tab Startup','Đây là virus, cần xóa khỏi ổ cứng'],
+    ok:1,
+    expl:'✅ Đúng! System Idle Process là tiến trình ĐO lượng CPU chưa dùng đến. 85% nghĩa là CPU đang rảnh 85% — máy rất nhàn. Đây KHÔNG phải tiến trình rác và không được xóa!'
+  }
+];
+
+let qi=0,score=0,answered=false;
+const letters=['A','B','C','D'];
+function drawProg(){document.getElementById('qprog').innerHTML=Qs.map((_,i)=>`<div class="qpd ${i<qi?'done':i===qi?'curr':''}"></div>`).join('')}
+function renderQ(){
+  answered=false; drawProg();
+  const q=Qs[qi];
+  document.getElementById('qarea').innerHTML=`
+    <div class="qctr">Câu ${qi+1} / ${Qs.length}</div>
+    <div class="qtext">${q.q}</div>
+    <div class="qopts">${q.opts.map((o,i)=>`<button class="qo" onclick="doAns(${i})"><span class="ql">${letters[i]}.</span>${o}</button>`).join('')}</div>
+    <div id="qfb"></div>`;
+}
+function doAns(i){
+  if(answered)return; answered=true;
+  const q=Qs[qi];
+  document.querySelectorAll('.qo').forEach((b,idx)=>{
+    b.disabled=true;
+    if(idx===q.ok)b.classList.add('ok');
+    else if(idx===i&&i!==q.ok)b.classList.add('no');
+  });
+  const ok=i===q.ok; if(ok)score++;
+  const fb=document.getElementById('qfb');
+  if(qi<Qs.length-1){
+    fb.innerHTML=`<div class="qfb ${ok?'ok':'no'}"><strong>${ok?'✅ Chính xác!':'❌ Chưa đúng!'}</strong>${q.expl}</div><button class="qnext" onclick="qi++;renderQ()">Câu tiếp theo →</button>`;
+  } else {
+    const pct=Math.round(score/Qs.length*100);
+    const msg=pct===100?'🎉 Xuất sắc! Nắm vững hoàn toàn!':pct>=67?'💪 Tốt! Ôn lại phần còn yếu nhé.':'📚 Đọc lại bài rồi thử lại nhé!';
+    const col=pct===100?'var(--green)':pct>=67?'var(--blue)':'var(--amber)';
+    fb.innerHTML=`<div class="qfb ${ok?'ok':'no'}"><strong>${ok?'✅ Chính xác!':'❌ Chưa đúng!'}</strong>${q.expl}</div>
+      <div class="score-wrap" style="margin-top:.75rem">
+        <div class="score-big" style="color:${col}">${score}/${Qs.length}</div>
+        <div class="msg">${msg}</div>
+        <p style="font-size:.9rem;color:var(--text2);margin-bottom:.75rem">Tỷ lệ đúng: ${pct}%</p>
+        <button onclick="qi=0;score=0;renderQ()">↺ Làm lại từ đầu</button>
+      </div>`;
+  }
+}
+renderQ();
+</script>
+</body>
+</html>
